@@ -8,11 +8,17 @@ services:
     cap_drop:
       - all
     read_only: true
+    ports:
+      - "8079:8079"
+    labels:
+      - "traefik.backend=front-end"
+      - "traefik.frontend.rule=PathPrefix:/"
+      - "traefik.port=8079"
+
   edge-router:
     image: weaveworksdemos/edge-router:0.1.1
     ports:
-      - '80:80'
-      - '8080:8080'
+      - '8085:80'
     cap_drop:
       - all
     cap_add:
@@ -26,6 +32,9 @@ services:
       - /var/run:rw,noexec,nosuid
     hostname: edge-router
     restart: always
+    labels:
+      - "traefik.enable=true"
+
   catalogue:
     image: weaveworksdemos/catalogue:0.3.5
     hostname: catalogue
